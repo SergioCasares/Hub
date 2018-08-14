@@ -152,8 +152,7 @@ public class Main extends JavaPlugin {
 	
 	public String getStatus() {
 		boolean is = getConfig().getBoolean("hub.api.mode") ? false : true;
-		boolean en = pm.isPluginEnabled(this) ? true : false;
- 		if (en) {
+ 		if (pm.isPluginEnabled(this)) {
 			if (is) {
 				return "Enabled";
 			} else {
