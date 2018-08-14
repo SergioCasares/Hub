@@ -6,10 +6,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.djbiokinetix.hub.Main;
+import com.djbiokinetix.hub.util.FireworkManager;
 
 public class PlayerEvents implements Listener {
 
 	public Main plugin;
+	public FireworkManager fireworkManager = new FireworkManager();
 	
 	public PlayerEvents(Main instance) {
 		plugin = instance;
@@ -20,6 +22,9 @@ public class PlayerEvents implements Listener {
 		Player p = e.getPlayer();
 		if (p.hasPermission("hub.event.join")) {
 			p.sendMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.join").replaceAll("%player%", p.getName())));
+			if (p.hasPermission("hub.event.join.firework")) {
+				fireworkManager.fireworkRandom(p.getLocation());
+			}
 		}
 		return;
 	}

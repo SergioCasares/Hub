@@ -10,3 +10,5 @@ commands:
 permissions:
    hub.event.join:
     default: op
+   hub.event.join.firework:
+    default: op
