@@ -4,10 +4,12 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.djbiokinetix.hub.commands.MainCommand;
+import com.djbiokinetix.hub.events.PlayerEvents;
 
 public class Main extends JavaPlugin {
 
@@ -16,7 +18,8 @@ public class Main extends JavaPlugin {
 	public static final Logger l = Logger.getLogger("Minecraft");
 	public PluginManager pm = Bukkit.getPluginManager();
 	
-	public String prefix = "&8[&6Code&8] ";
+	public String prefix_obligatory = "&8[&6Code&8] ";
+	public String prefix_configurable = getConfig().getString("hub.config.prefix");
 	
 	@Override
 	public void onEnable() {
@@ -24,7 +27,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public void registerEvents() {
-		
+		pm.registerEvents(new PlayerEvents(this), this);
 	}
 	
 	public void registerCommands() {
@@ -34,6 +37,10 @@ public class Main extends JavaPlugin {
 	public void registerConfiguration() {
 		getConfig().addDefault("", "");
 		saveConfig();
+	}
+	
+	public void sendToServer(Player p, String server) {
+		
 	}
 	
 	public String setColor(String color) {

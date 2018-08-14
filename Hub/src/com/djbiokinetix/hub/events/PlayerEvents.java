@@ -21,6 +21,10 @@ public class PlayerEvents implements Listener {
 		if ((p.isOp()) && (p.hasPermission(""))) {
 			
 		}
+		if (p.hasPermission("hub.event.join")) {
+			p.sendMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.join")));
+		}
+		return;
 	}
 	
 }

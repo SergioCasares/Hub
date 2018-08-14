@@ -22,14 +22,14 @@ public class MainCommand implements CommandExecutor {
 			Player p = (Player) sender;
 			
 			if (args.length == 0) {
-				p.sendMessage(plugin.setColor(plugin.prefix + plugin.getConfig().getString("hub.config.messages.executor")));
+				p.sendMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.executor")));
 				return true;
 			}
 			
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("reload")) {
 					plugin.reloadConfig();
-					p.sendMessage(plugin.setColor(plugin.prefix + plugin.getConfig().getString("hub.config.messages.reload")));
+					p.sendMessage(plugin.setColor(plugin.prefix_obligatory + plugin.getConfig().getString("hub.config.messages.reload")));
 				}
 			}
 			
