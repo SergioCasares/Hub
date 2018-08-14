@@ -4,6 +4,7 @@ version: 5.0
 main: com.djbiokinetix.hub.Main
 description: |
     A Hub plugin for your Network.
+api-version: 1.13
 commands:
    /hub:
     description: Main command.

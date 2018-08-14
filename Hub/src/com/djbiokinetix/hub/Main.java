@@ -3,10 +3,12 @@ package com.djbiokinetix.hub;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,6 +16,7 @@ import org.bukkit.plugin.messaging.Messenger;
 
 import com.djbiokinetix.hub.commands.MainCommand;
 import com.djbiokinetix.hub.events.PlayerEvents;
+import com.djbiokinetix.hub.util.RecordManager;
 
 public class Main extends JavaPlugin {
 
@@ -22,12 +25,14 @@ public class Main extends JavaPlugin {
 	public static final Logger l = Logger.getLogger("Minecraft");
 	public PluginManager pm = Bukkit.getPluginManager();
 	public Messenger msn = Bukkit.getMessenger();
+	public HashMap<String, Sound> soundSaved = new HashMap<>();
 	
 	public String prefix_obligatory = "&8[&6Hub&8] ";
 	public String prefix_configurable = getConfig().getString("hub.config.prefix") + " ";
 	
 	@Override
 	public void onEnable() {
+		
 		plugin = this;
 		l.info("");
 		l.info("=========[Hub]=========");
@@ -173,6 +178,10 @@ public class Main extends JavaPlugin {
 		l.info(" > Version: " + getDescription().getVersion());
 		l.info("");
 		l.info("=======================");
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			RecordManager.stopRecord(players, soundSaved.get("music"));
+		}
+		soundSaved.clear();
 	}
 	
 }
