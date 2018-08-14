@@ -18,13 +18,8 @@ public class PlayerEvents implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		if ((p.isOp()) && (p.hasPermission(""))) {
-			
-		}
 		if (p.hasPermission("hub.event.join")) {
-			p.sendMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.join")));
-		} else if (p.hasPermission("")) {
-			
+			p.sendMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.join").replaceAll("%player%", p.getName())));
 		}
 		return;
 	}

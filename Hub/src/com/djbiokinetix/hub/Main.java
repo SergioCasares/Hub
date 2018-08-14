@@ -2,6 +2,7 @@ package com.djbiokinetix.hub;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -22,51 +23,157 @@ public class Main extends JavaPlugin {
 	public PluginManager pm = Bukkit.getPluginManager();
 	public Messenger msn = Bukkit.getMessenger();
 	
-	public String prefix_obligatory = "&8[&6Code&8] ";
+	public String prefix_obligatory = "&8[&6Hub&8] ";
 	public String prefix_configurable = getConfig().getString("hub.config.prefix") + " ";
 	
 	@Override
 	public void onEnable() {
 		plugin = this;
+		l.info("");
+		l.info("=========[Hub]=========");
+		l.info("");
+		l.info(" > Name: " + getDescription().getName());
+		l.info(" > Status: " + getStatus());
+		l.info(" > Main: " + getMain());
+		l.info(" > Author: " + getDescription().getAuthors());
+		l.info(" > Version: " + getDescription().getVersion());
+		l.info("");
+		l.info("=======================");
+		l.info("");
+		if (!getConfig().getBoolean("hub.api.mode")) {
+			try {
+				registerEvents();
+			} catch (Exception e) {
+				l.info("");
+				l.info("=========[Hub]=========");
+				l.info("");
+				l.info(" >>> Events NOT registered.");
+			}
+			try {
+				registerCommands();
+			} catch (Exception e) {
+				l.info(" >>> Commands NOT registered.");
+			}
+			try {
+				registerConfiguration();
+			} catch (Exception e) {
+				l.info(" >>> Configuration NOT registered.");
+				l.info("");
+				l.info("=======================");
+				l.info("");
+			}
+		}
 	}
 
 	public void registerEvents() {
+		l.info("");
+		l.info("=========[Hub]=========");
+		l.info("");
+		l.info(" > Events registered!");
 		msn.registerOutgoingPluginChannel(this, "BungeeCord");
 		pm.registerEvents(new PlayerEvents(this), this);
 	}
 	
 	public void registerCommands() {
+		l.info(" > Commands registered!");;
 		getCommand("/hub").setExecutor(new MainCommand(this));
 	}
 	
 	public void registerConfiguration() {
-		getConfig().addDefault("", "");
-		saveConfig();
+		l.info(" > Configuration registered!");
+		try {
+			File file = new File(getDataFolder() + File.separator + "config.yml");
+			if (!file.exists()) {
+				l.info("");
+				l.info(" > Creating configuration...");
+				l.info("");
+				try {
+					getConfig().addDefault("hub.api.mode", false);
+					getConfig().addDefault("hub.config.prefix", "&8[&6Hub&8]");
+					getConfig().addDefault("hub.config.messages.join", "&e%player% &7joined the game!");
+					getConfig().addDefault("hub.config.messages.cooldown", "&7wait &b%seconds% &7for use again.");
+					getConfig().addDefault("hub.config.messages.executor", "&eA test");
+					getConfig().addDefault("hub.config.messages.reload", "&aconfiguration reloaded.");
+					getConfig().addDefault("hub.config.cooldowns.time", 10);
+					getConfig().options().copyDefaults(true);
+					saveConfig();
+					l.info(" > Configuration created!");
+					l.info("");
+					l.info("=======================");
+					l.info("");
+				} catch (Exception e) {
+					l.warning("---> The configuration can't be created!");
+					l.warning("Please uninstall the plugin, contact DJBiokinetix for resolve your problem.");
+					l.info("Shutting down your server!");
+					Bukkit.shutdown();
+				}
+			} else {
+				l.info("");
+				l.info(" > Configuration already exist!");
+				l.info("");
+				l.info("=======================");
+				l.info("");
+			}
+		} catch (Exception ex) {
+			l.warning(" --> Configuration error.");
+			l.warning("Please uninstall the plugin, contact DJBiokinetix for resolve your problem.");
+			l.info("Shutting down your server!");
+			Bukkit.shutdown();
+		}
 	}
 	
 	public void send(Player p, String server) {
-		
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 	    DataOutputStream salida = new DataOutputStream(b);
-	    
+	    l.info("Calling OutputStream...");
 	    try {
-	      salida.writeUTF("Connect");
-	      salida.writeUTF(server);
+	    	salida.writeUTF("Connect");
+	      	salida.writeUTF(server);
+	      	l.info("sending " + p.getName() + " to server " + server);
 	    } catch (Exception e) {
-	      return;
+	    	l.warning(p.getName() + " can't connect with server " + server);
+	    	return;
 	    }
-	    
 	    p.sendPluginMessage(this, "BungeeCord", b.toByteArray());
-	    
+	    l.info(p.getName() + " was send from this server to " + server);
 	}
 	
 	public String setColor(String color) {
 		return ChatColor.translateAlternateColorCodes('&', color);
 	}
 	
+	public String getMain() {
+		boolean is = getConfig().getBoolean("hub.api.mode") ? true : false;
+		if (is) {
+			return "Without \"Main\" class.";
+		}
+		return getDescription().getMain();
+	}
+	
+	public String getStatus() {
+		boolean is = getConfig().getBoolean("hub.api.mode") ? false : true;
+		boolean en = pm.isPluginEnabled(this) ? true : false;
+ 		if (en) {
+			if (is) {
+				return "Enabled";
+			} else {
+				return "API";
+			}
+		}
+		return "Disabled";
+	}
+	
 	@Override
 	public void onDisable() {
-		
+		l.info("=========[Hub]=========");
+		l.info("");
+		l.info(" > Name: " + getDescription().getName());
+		l.info(" > Status: " + getStatus());
+		l.info(" > Main: " + getMain());
+		l.info(" > Author: " + getDescription().getAuthors());
+		l.info(" > Version: " + getDescription().getVersion());
+		l.info("");
+		l.info("=======================");
 	}
 	
 }
