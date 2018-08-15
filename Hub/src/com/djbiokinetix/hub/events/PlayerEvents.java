@@ -3,6 +3,7 @@ package com.djbiokinetix.hub.events;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.djbiokinetix.hub.Main;
@@ -21,12 +22,18 @@ public class PlayerEvents implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		if (p.hasPermission("hub.event.join")) {
-			p.sendMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.join").replaceAll("%player%", p.getName())));
+			e.setJoinMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.join").replaceAll("%player%", p.getName())));
 			if (p.hasPermission("hub.event.join.firework")) {
 				fireworkManager.fireworkRandom(p.getLocation());
 			}
 		}
+		e.setJoinMessage(null);
 		return;
+	}
+	
+	@EventHandler
+	public void onClickInv(InventoryInteractEvent e) {
+		
 	}
 	
 }

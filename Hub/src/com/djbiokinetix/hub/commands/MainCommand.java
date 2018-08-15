@@ -1,15 +1,21 @@
 package com.djbiokinetix.hub.commands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 import com.djbiokinetix.hub.Main;
+import com.djbiokinetix.hub.util.ItemStackManager;
 import com.djbiokinetix.hub.util.RecordManager;
 
 public class MainCommand implements CommandExecutor {
@@ -38,7 +44,15 @@ public class MainCommand implements CommandExecutor {
 					}
 				}
 				cooldowns.put(p.getName(), System.currentTimeMillis());
-				p.sendMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.executor")));
+				Inventory inv = Bukkit.createInventory((InventoryHolder) null, 27, plugin.setColor(plugin.getConfig().getString("hub.config.inventory.name")));
+				ItemStackManager ism = new ItemStackManager();
+				ArrayList<String> lore = new ArrayList<String>();
+				for (String string : plugin.getConfig().getStringList("hub.config.inventory.item-1.lore")) {
+					lore.add(plugin.setColor(string));
+				}
+				inv.setItem(0, ism.createItem(Material.MUSIC_DISC_CHIRP, 1, (short) 0, plugin.setColor(plugin.getConfig().getString("hub.config.inventory.item-1.name")), lore));
+				p.openInventory(inv);
+				p.sendMessage(plugin.setColor(plugin.prefix_configurable + plugin.getConfig().getString("hub.config.messages.inventory.opening").replaceAll(p.getName(), "%player%")));
 				return true;
 			}
 			
@@ -103,7 +117,7 @@ public class MainCommand implements CommandExecutor {
 									return true;
 								}
 							} else {
-								p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7You can't start another record before this record."));
+								p.sendMessage(plugin.setColor(plugin.prefix_obligatory + plugin.getConfig().getString("hub.config.messages.music.play-exception")));
 							}
 							
 						} else {
@@ -114,6 +128,7 @@ public class MainCommand implements CommandExecutor {
 						p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7Subcomandos que puedes ejecutar:\n&8[&6Ex&8] &7Subcomandos: <&aplay &7| &cstop &7| &f11 &7| &f13 &7| &fblocks &7| &fcat &7| &fchirp &7| &ffar &7| &fmellohi &7| &fstal &7| &fstrad &7| &fwait &7| &fward&7>"));
 					}
 				}
+				
 			}
 			
 		} else {

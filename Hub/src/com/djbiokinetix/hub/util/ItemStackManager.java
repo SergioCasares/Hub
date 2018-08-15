@@ -11,7 +11,7 @@ public class ItemStackManager {
 
 	public ItemStackManager() {}
 
-	public static ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore) {
+	public ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore) {
 		ItemStack is = new ItemStack(material, cantidad, metadata);
 		ItemMeta im = is.getItemMeta();
 		im.setDisplayName(nombre);
@@ -20,7 +20,7 @@ public class ItemStackManager {
 		return is;
 	}
 	
-	public static ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore, boolean unbreakable) {
+	public ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore, boolean unbreakable) {
 		ItemStack is = new ItemStack(material, cantidad, metadata);
 		ItemMeta im = is.getItemMeta();
 		im.setDisplayName(nombre);
@@ -30,7 +30,7 @@ public class ItemStackManager {
 		return is;
 	}
 	
-	public static ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore, boolean unbreakable, String localizedName) {
+	public ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore, boolean unbreakable, String localizedName) {
 		ItemStack is = new ItemStack(material, cantidad, metadata);
 		ItemMeta im = is.getItemMeta();
 		im.setDisplayName(nombre);
@@ -41,7 +41,7 @@ public class ItemStackManager {
 		return is;
 	}
 	
-	public static ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore, String localizedName) {
+	public ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore, String localizedName) {
 		ItemStack is = new ItemStack(material, cantidad, metadata);
 		ItemMeta im = is.getItemMeta();
 		im.setDisplayName(nombre);
@@ -51,7 +51,7 @@ public class ItemStackManager {
 		return is;
 	}
 	
-	public static ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore, Enchantment enchantment, int enchid, boolean add) {
+	public ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore, Enchantment enchantment, int enchid, boolean add) {
 		ItemStack is = new ItemStack(material, cantidad, metadata);
 		ItemMeta im = is.getItemMeta();
 		im.setDisplayName(nombre);

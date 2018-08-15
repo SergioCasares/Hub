@@ -3,7 +3,9 @@ package com.djbiokinetix.hub;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -29,6 +31,7 @@ public class Main extends JavaPlugin {
 	public RecordManager rm = new RecordManager();
 	
 	public String prefix_obligatory = "&8[&6Hub&8] ";
+	public String subprefix_configurable = getConfig().getString("hub.config.sub-prefix") + " ";
 	public String prefix_configurable = getConfig().getString("hub.config.prefix") + " ";
 	
 	@Override
@@ -43,6 +46,7 @@ public class Main extends JavaPlugin {
 		l.info(" > Main: " + getMain());
 		l.info(" > Author: " + getDescription().getAuthors());
 		l.info(" > Version: " + getDescription().getVersion());
+		l.info(" > Bukkit API: " + getDescription().getAPIVersion());
 		l.info("");
 		l.info("=======================");
 		l.info("");
@@ -99,11 +103,21 @@ public class Main extends JavaPlugin {
 					getConfig().addDefault("hub.api.mode", false);
 					getConfig().addDefault("hub.config.config-version", "5.0");
 					getConfig().addDefault("hub.config.prefix", "&8[&6Hub&8]");
+					getConfig().addDefault("hub.config.sub-prefix", "&8[&6Ex&8]");
 					getConfig().addDefault("hub.config.messages.join", "&e%player% &7joined the game!");
 					getConfig().addDefault("hub.config.messages.cooldown", "&7wait &b%seconds% &7for use again.");
-					getConfig().addDefault("hub.config.messages.executor", "&eA test");
 					getConfig().addDefault("hub.config.messages.reload", "&aconfiguration reloaded.");
+					getConfig().addDefault("hub.config.messages.music.play-exception", "&7You can't start another record before this record.");
+					getConfig().addDefault("hub.config.messages.inventory.opening", "&7Opening the inventory for %player%");
+					getConfig().addDefault("hub.config.inventory.name", "&8[Code] Inventory.");
+					getConfig().addDefault("hub.config.inventory.item-1.name", "&cItem-1");
+					List<String> list = new ArrayList<String>();
+					list.add("&cClick here");
+					list.add("&aClick here");
+					list.add("&eClick here");
+					getConfig().addDefault("hub.config.inventory.item-1.lore", list);
 					getConfig().addDefault("hub.config.cooldowns.time", 10);
+					//hub.config.inventory.name
 					getConfig().options().copyDefaults(true);
 					saveConfig();
 					l.info(" > Configuration created!");
@@ -181,6 +195,7 @@ public class Main extends JavaPlugin {
 		l.info(" > Main: " + getMain());
 		l.info(" > Author: " + getDescription().getAuthors());
 		l.info(" > Version: " + getDescription().getVersion());
+		l.info(" > Bukkit API: " + getDescription().getAPIVersion());
 		l.info("");
 		l.info("=======================");
 		for (Player players : Bukkit.getOnlinePlayers()) {
