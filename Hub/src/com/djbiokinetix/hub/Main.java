@@ -26,6 +26,7 @@ public class Main extends JavaPlugin {
 	public PluginManager pm = Bukkit.getPluginManager();
 	public Messenger msn = Bukkit.getMessenger();
 	public HashMap<String, Sound> soundSaved = new HashMap<>();
+	public RecordManager rm = new RecordManager();
 	
 	public String prefix_obligatory = "&8[&6Hub&8] ";
 	public String prefix_configurable = getConfig().getString("hub.config.prefix") + " ";
@@ -85,7 +86,9 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void registerConfiguration() {
+		
 		l.info(" > Configuration registered!");
+		
 		try {
 			File file = new File(getDataFolder() + File.separator + "config.yml");
 			if (!file.exists()) {
@@ -94,6 +97,7 @@ public class Main extends JavaPlugin {
 				l.info("");
 				try {
 					getConfig().addDefault("hub.api.mode", false);
+					getConfig().addDefault("hub.config.config-version", "5.0");
 					getConfig().addDefault("hub.config.prefix", "&8[&6Hub&8]");
 					getConfig().addDefault("hub.config.messages.join", "&e%player% &7joined the game!");
 					getConfig().addDefault("hub.config.messages.cooldown", "&7wait &b%seconds% &7for use again.");
@@ -125,6 +129,7 @@ public class Main extends JavaPlugin {
 			l.info("Shutting down your server!");
 			Bukkit.shutdown();
 		}
+		
 	}
 	
 	public void send(Player p, String server) {
@@ -179,9 +184,13 @@ public class Main extends JavaPlugin {
 		l.info("");
 		l.info("=======================");
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			RecordManager.stopRecord(players, soundSaved.get("music"));
+			if (soundSaved.isEmpty()) {
+				l.info("Any sound saved, stopping the process...");
+			} else {
+				rm.stopRecord(players, soundSaved.get("music"));
+				soundSaved.clear();
+			}
 		}
-		soundSaved.clear();
 	}
 	
 }

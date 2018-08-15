@@ -16,6 +16,7 @@ public class MainCommand implements CommandExecutor {
 
 	public Main plugin;
 	public HashMap<String, Long> cooldowns = new HashMap<String, Long>();
+	public RecordManager rm = new RecordManager();
 	
 	public MainCommand(Main instance) {
 		plugin = instance;
@@ -51,17 +52,66 @@ public class MainCommand implements CommandExecutor {
 				}
 				if (args[0].equalsIgnoreCase("music")) {
 					if (args.length == 2) {
+						
 						if (args[1].equalsIgnoreCase("play")) {
-							p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7Listen the music!"));
-							RecordManager.playRecord(p, p.getLocation(), getRecords());
+							if (plugin.soundSaved.isEmpty()) {
+								
+								p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7Listen the music!"));
+								rm.playRecord(p, p.getLocation(), getRecords());
+								p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7Now playing &b" + plugin.soundSaved.get("music").toString().replaceAll("MUSIC_DISC_", "").toLowerCase() + " &7record!"));
+								
+							} else {
+								
+								p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7You can't start another record before this record."));
+								
+							}
 						}
+						
 						if (args[1].equalsIgnoreCase("stop")) {
-							p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&cStopping..."));
-							RecordManager.stopRecord(p, plugin.soundSaved.get("music"));
-							plugin.soundSaved.clear();
+							
+							if (plugin.soundSaved.isEmpty()) {
+								
+								p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7No se puede parar un record que no se esta reproduciendo."));
+								
+							} else {
+								
+								p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&cStopping..."));
+								rm.stopRecord(p, plugin.soundSaved.get("music"));
+								plugin.soundSaved.clear();
+								
+							}
+							
 						}
+						
+						if (args[1].contains(args[1])) {
+							if (args[1].equals("stop")) {
+								return true;
+							}
+							if (args[1].equals("play")) {
+								return true;
+							}
+							
+							if (plugin.soundSaved.isEmpty()) {
+								try {
+									
+									String named = args[1].replaceAll(args[1], "MUSIC_DISC_"+args[1].toUpperCase());
+									rm.playRecord(p, p.getLocation(), getRecords(named));
+									p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7Now playing &b" + plugin.soundSaved.get("music").toString().replaceAll("MUSIC_DISC_", "").toLowerCase() + " &7record!"));
+									
+								} catch (IllegalArgumentException ex) {
+									p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7Ese record no existe!"));
+									return true;
+								}
+							} else {
+								p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7You can't start another record before this record."));
+							}
+							
+						} else {
+							return true;
+						}
+						
 					} else {
-						p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7Pocos argumentos."));
+						p.sendMessage(plugin.setColor(plugin.prefix_obligatory + "&7Subcomandos que puedes ejecutar:\n&8[&6Ex&8] &7Subcomandos: <&aplay &7| &cstop &7| &f11 &7| &f13 &7| &fblocks &7| &fcat &7| &fchirp &7| &ffar &7| &fmellohi &7| &fstal &7| &fstrad &7| &fwait &7| &fward&7>"));
 					}
 				}
 			}
@@ -80,7 +130,12 @@ public class MainCommand implements CommandExecutor {
 		return true;
 	}
 	
-	public Sound getRecords() {
+	private Sound getRecords(String soundName) {
+		plugin.soundSaved.put("music", Sound.valueOf(soundName));
+		return Sound.valueOf(soundName);
+	}
+	
+	private Sound getRecords() {
 		
 		Sound sound = null;
 		Random r = new Random();
