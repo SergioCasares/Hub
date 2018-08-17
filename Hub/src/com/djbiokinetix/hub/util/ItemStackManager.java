@@ -7,8 +7,12 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.djbiokinetix.hub.Main;
+
 public class ItemStackManager {
 
+	public Main plugin;
+	
 	public ItemStackManager() {}
 
 	public ItemStack createItem(Material material, int cantidad, short metadata, String nombre, List<String> lore) {

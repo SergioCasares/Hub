@@ -30,14 +30,13 @@ public class Main extends JavaPlugin {
 	public HashMap<String, Sound> soundSaved = new HashMap<>();
 	public RecordManager rm = new RecordManager();
 	
-	public String prefix_obligatory = "&8[&6Hub&8] ";
-	public String subprefix_configurable = getConfig().getString("hub.config.sub-prefix") + " ";
-	public String prefix_configurable = getConfig().getString("hub.config.prefix") + " ";
+	public String prefix_obligatory = setColor("&8[&6Hub&8] ");
 	
 	@Override
 	public void onEnable() {
 		
 		plugin = this;
+		
 		l.info("");
 		l.info("=========[Hub]=========");
 		l.info("");
@@ -47,6 +46,11 @@ public class Main extends JavaPlugin {
 		l.info(" > Author: " + getDescription().getAuthors());
 		l.info(" > Version: " + getDescription().getVersion());
 		l.info(" > Bukkit API: " + getDescription().getAPIVersion());
+		if (getConfig().getDouble("hub.version.configuration") == 5.0) {
+			l.info(" > Configuration version: " + getConfig().getDouble("hub.version.configuration"));
+		} else if (getConfig().getDouble("hub.version.configuration") < 5.0 || getConfig().getDouble("hub.version.configuration") > 5.0 ) {
+			l.info(" > Configuration version: " + getConfig().getDouble("hub.version.configuration") + " (Outdated config)");
+		}
 		l.info("");
 		l.info("=======================");
 		l.info("");
@@ -58,6 +62,7 @@ public class Main extends JavaPlugin {
 				l.info("=========[Hub]=========");
 				l.info("");
 				l.info(" >>> Events NOT registered.");
+				e.printStackTrace();
 			}
 			try {
 				registerCommands();
@@ -100,22 +105,36 @@ public class Main extends JavaPlugin {
 				l.info(" > Creating configuration...");
 				l.info("");
 				try {
-					getConfig().addDefault("hub.api.mode", false);
-					getConfig().addDefault("hub.config.config-version", "5.0");
-					getConfig().addDefault("hub.config.prefix", "&8[&6Hub&8]");
-					getConfig().addDefault("hub.config.sub-prefix", "&8[&6Ex&8]");
-					getConfig().addDefault("hub.config.messages.join", "&e%player% &7joined the game!");
-					getConfig().addDefault("hub.config.messages.cooldown", "&7wait &b%seconds% &7for use again.");
-					getConfig().addDefault("hub.config.messages.reload", "&aconfiguration reloaded.");
-					getConfig().addDefault("hub.config.messages.music.play-exception", "&7You can't start another record before this record.");
-					getConfig().addDefault("hub.config.messages.inventory.opening", "&7Opening the inventory for %player%");
-					getConfig().addDefault("hub.config.inventory.name", "&8[Code] Inventory.");
-					getConfig().addDefault("hub.config.inventory.item-1.name", "&cItem-1");
+					
 					List<String> list = new ArrayList<String>();
+					
 					list.add("&cClick here");
 					list.add("&aClick here");
 					list.add("&eClick here");
+					
+					getConfig().addDefault("hub.api.mode", false);
+					getConfig().addDefault("hub.version.configuration", 5.0);
+					getConfig().addDefault("hub.prefix", "&8[&6Hub&8]");
+					getConfig().addDefault("hub.config.messages.join", "&e%player% &7joined the game!");
+					getConfig().addDefault("hub.config.messages.quit", "&e%player% &7left the game!");
+					getConfig().addDefault("hub.config.messages.kick", "&e%player% &7left the game!");
+					getConfig().addDefault("hub.config.messages.cooldown", "&7wait &b%seconds% &7for use again.");
+					getConfig().addDefault("hub.config.messages.reload", "&7Configuration reloaded.");
+					getConfig().addDefault("hub.config.messages.playing", "&7Now playing: &f%record%&7!");
+					getConfig().addDefault("hub.config.messages.music.play-exception", "&7You can't start other record before this record.");
+					getConfig().addDefault("hub.config.inventory.name", "&8[Code] Inventory.");
+					getConfig().addDefault("hub.config.inventory.item-1.name", "&cItem-1");
+					getConfig().addDefault("hub.config.inventory.item-2.name", "&cItem-2");
+					getConfig().addDefault("hub.config.inventory.item-3.name", "&cItem-3");
+					getConfig().addDefault("hub.config.inventory.item-4.name", "&cItem-4");
+					getConfig().addDefault("hub.config.inventory.item-5.name", "&cItem-5");
+					getConfig().addDefault("hub.config.inventory.item-6.name", "&cItem-5");
 					getConfig().addDefault("hub.config.inventory.item-1.lore", list);
+					getConfig().addDefault("hub.config.inventory.item-2.lore", list);
+					getConfig().addDefault("hub.config.inventory.item-3.lore", list);
+					getConfig().addDefault("hub.config.inventory.item-4.lore", list);
+					getConfig().addDefault("hub.config.inventory.item-5.lore", list);
+					getConfig().addDefault("hub.config.inventory.item-6.lore", list);
 					getConfig().addDefault("hub.config.cooldowns.time", 10);
 					//hub.config.inventory.name
 					getConfig().options().copyDefaults(true);
@@ -125,9 +144,14 @@ public class Main extends JavaPlugin {
 					l.info("=======================");
 					l.info("");
 				} catch (Exception e) {
-					l.warning("---> The configuration can't be created!");
-					l.warning("Please uninstall the plugin, contact DJBiokinetix for resolve your problem.");
-					l.info("Shutting down your server!");
+					l.warning(" >> The configuration can't be created!");
+					l.warning(" >> Please uninstall the plugin");
+					l.warning(" >> Contact DJBiokinetix for resolve your problem.");
+					l.info("");
+					l.info("=======================");
+					l.info("");
+					l.warning(" >> Shutting down your server!");
+					l.info("");
 					Bukkit.shutdown();
 				}
 			} else {
